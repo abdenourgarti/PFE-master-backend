@@ -1,19 +1,16 @@
-// src/app.js
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
 const cors = require("cors");
 
 // Routes
 const indexRoutes = require("./routes/index");
 const userRoute = require("./routes/userRoute");
 const organizationRoute = require("./routes/organizationRoute");
-// <<<<<<< HEAD
 const taskRoute = require("./routes/taskRoute");
-
 const projectRoute = require("./routes/projectRoute");
 const teamRoute = require("./routes/teamRoute");
 const commentRoute = require("./routes/commentRoute");
@@ -21,8 +18,6 @@ const notificationRoute = require("./routes/notificationRoute");
 const invitationRoute = require("./routes/invitationRoute");
 const sendEmailRoute = require("./routes/sendEmailRoute");
 const delegationRoute = require("./routes/delegationRoute");
-// =======
-// >>>>>>> a28265b8e5ac52ec9a9eded7de38aeb729310987
 
 // Middleware
 app.use(cors());
@@ -31,8 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-// app.use(express.json());
-// app.use(require("express-inspector"));
+
 // Routes
 app.use("/", indexRoutes);
 app.use("/user", userRoute);
@@ -49,7 +43,17 @@ app.use("/delegation", delegationRoute);
 // Route statique pour servir les fichiers uploadés
 app.use('/uploads', express.static(path.join(__dirname, './uploads')));
 
+// MongoDB connection
+const connectionString = "mongodb+srv://gartiabdou074:zandaf123456@pfemaster.nv4nnwo.mongodb.net/?retryWrites=true&w=majority&appName=PFEmaster";
 
+mongoose
+  .connect(connectionString)
+  .then(() => {
+    console.log("Connected to MongoDB!");
+  })
+  .catch((err) => console.error("Error connecting to MongoDB:", err));
+
+// Error handling middleware
 app.use((err, req, res, next) => {
   if (err instanceof mongoose.Error.ValidationError) {
     return res.status(400).json({
@@ -85,7 +89,5 @@ app.use((err, req, res, next) => {
     message: "An unexpected error occurred. Please try again later.",
   });
 });
-
-const port = process.env.PORT || 1937; // Use environment variable or default port
 
 module.exports = app;
