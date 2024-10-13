@@ -25,7 +25,7 @@ const delegationRoute = require("./routes/delegationRoute");
 // >>>>>>> a28265b8e5ac52ec9a9eded7de38aeb729310987
 
 // Middleware
-app.use(cors({origin: "*"}));
+app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
